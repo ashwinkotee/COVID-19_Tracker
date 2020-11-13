@@ -52,4 +52,15 @@ public class CoronaVirusDataService {
         }
         this.allStats = newStats;
     }
+
+    // tmp until db is set up
+    public List<String> getData()  {
+        List<String> newStats = new ArrayList<>();
+
+        newStats.add(",,,Iraq,2020-11-12 05:25:55,33.223191,43.679291,508508,11482,436657,60369,Iraq,1264.2375836232768,2.2579782422302106");
+        newStats.add(",,,Ireland,2020-11-12 05:25:55,53.1424,-7.6921,66247,1965,23364,40918,Ireland,1341.6309624779965,2.9661720530741014");
+        newStats.add(",,,Jamaica,2020-11-12 05:25:55,18.1096,-77.2975,9581,225,4995,4361,Jamaica,323.55552433656936,2.3483978707859303");
+
+        return newStats;
+    }
 }
