@@ -45,7 +45,7 @@ class CoronavirusTrackerApplicationTests {
 		assertNotNull(result);
 		assertEquals(result.get(0).getCountry(), "Afghanistan");
 	}
-
+/*
 	@Test
 	void testCountry() throws Exception {
 		List<String> result = this.homeController.country("Ireland");
@@ -56,7 +56,7 @@ class CoronavirusTrackerApplicationTests {
 				.accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/json"));
-*/
+
 	}
 
 	@Test
@@ -102,6 +102,6 @@ class CoronavirusTrackerApplicationTests {
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/json"));
 
-	}*/
-
+	}
+*/
 }

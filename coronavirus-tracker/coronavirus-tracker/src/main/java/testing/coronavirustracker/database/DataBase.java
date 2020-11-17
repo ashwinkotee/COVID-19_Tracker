@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSetMetaData;
 
-// this is a construction are atm but db creation and connecting to it works so the rest shouldn't be too difficult
 // if intellij is crying about missing jars, manually import derby.jar, derbyclient.jar, derbynet.jar, derbytools.jar
 // at file->project structure->modules->dependencies
 public class DataBase {
@@ -36,7 +35,7 @@ public class DataBase {
         }
     }
 
-    private static void insertData()
+    public static void insertData(ImportDataDTO dto)
     {
       try
         {

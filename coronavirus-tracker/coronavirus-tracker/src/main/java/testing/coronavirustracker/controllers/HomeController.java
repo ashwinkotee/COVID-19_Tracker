@@ -26,7 +26,7 @@ public class HomeController {
         model.addAttribute("totalReportedCases", totalReportedCases);
         return "home";
     }
-
+/*
     @GetMapping("/home/{country}}")
     @ResponseBody
     public List<String> country(@PathVariable String country) {
@@ -100,5 +100,5 @@ public class HomeController {
 
         return countryStats;
     }
-
+*/
 }
