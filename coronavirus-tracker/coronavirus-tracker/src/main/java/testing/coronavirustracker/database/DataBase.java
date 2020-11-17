@@ -15,14 +15,14 @@ public class DataBase {
     private static String tableName = "globalStatistics";
     private static Connection conn = null;
     private static Statement stmt = null;
-/*
+
     public static void main(String[] args)
     {
         // run startNetworkServer -h 0.0.0.0 from derby/bin before attempting to connect!
         createConnection();
         shutdown();
     }
-*/
+
     private static void createConnection()
     {
         try
@@ -36,20 +36,56 @@ public class DataBase {
         }
     }
 
-    private static void insertRestaurants(int id, String restName, String cityName)
+    private static void insertData()
     {
-        try
+      try
         {
             stmt = conn.createStatement();
-            stmt.execute("insert into " + tableName + " values (" +
-                    id + ",'" + restName + "','" + cityName +"')");
+            String sql = "";
+
+            stmt.executeUpdate(sql);
             stmt.close();
         }
+
         catch (SQLException sqlExcept)
         {
             sqlExcept.printStackTrace();
         }
     }
+
+    private static void setupTables()
+    {
+      try
+        {
+            stmt = conn.createStatement();
+            String sql = "CREATE TABLE import_table\n" +
+                            "(id INTEGER not NULL,\n" +
+                            "FIPS INTEGER,\n" +
+                            "Admin2 VARCHAR(500),\n" +
+                            "Province_State VARCHAR(500),\n" +
+                            "Country_Region VARCHAR(500),\n" +
+                            "Last_Update DATE,\n" +
+                            "Lat FLOAT,\n" +
+                            "Long FLOAT,\n" +
+                            "Confirmed INTEGER,\n" +
+                            "Deaths INTEGER,\n" +
+                            "Recovered INTEGER,\n" +
+                            "Active INTEGER,\n" +
+                            "Combined_Key VARCHAR(500),\n" +
+                            "Incident_Rate FLOAT,\n" +
+                            "Case_Fatality_Ratio FLOAT,\n" +
+                            "PRIMARY KEY ( id ))";
+
+            stmt.executeUpdate(sql);
+            stmt.close();
+        }
+
+        catch (SQLException sqlExcept)
+        {
+            sqlExcept.printStackTrace();
+        }
+    }
+
     private static void shutdown()
     {
         try
