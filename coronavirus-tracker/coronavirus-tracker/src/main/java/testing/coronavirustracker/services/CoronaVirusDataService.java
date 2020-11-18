@@ -39,7 +39,9 @@ public class CoronaVirusDataService {
 
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
         var date = sdf.format(new Date());
-        String todaysUrl = VIRUS_DATA_URL + date.toString() + ".csv";
+        //String todaysUrl = VIRUS_DATA_URL + date.toString() + ".csv";
+        //I gave todaysUrl the exact date in order to test if the data is inserted into the DB
+        String todaysUrl = VIRUS_DATA_URL + "11-16-2020.csv";
 
         List<LocationStats> newStats = new ArrayList<>();
         HttpClient client = HttpClient.newHttpClient();
@@ -72,15 +74,16 @@ public class CoronaVirusDataService {
             dto.setIncidentRate(record.get("Incident_Rate"));
             dto.setCaseFatalityRatio(record.get("Case_Fatality_Ratio"));
 
-            db.insertData(dto);
-             /*
-            LocationStats locationStats = new LocationStats();
-            locationStats.setState(record.get("Province/State"));
-            locationStats.setCountry(record.get("Country/Region"));
-            locationStats.setLatestTotalCases(Integer.parseInt(record.get(record.size() - 1)));
+            //db.insertData(dto);
+
+            /*LocationStats locationStats = new LocationStats();
+            locationStats.setState(record.get("Province_State"));
+            locationStats.setCountry(record.get("Country_Region"));
+            //locationStats.setLatestTotalCases(Integer.parseInt(record.get(record.size() - 1)));
+            locationStats.setLatestTotalCases(Integer.parseInt(record.get("Confirmed")));
             //System.out.println(locationStats);
-            newStats.add(locationStats);
-             */
+            newStats.add(locationStats);*/
+
         }
         this.allStats = newStats;
     }

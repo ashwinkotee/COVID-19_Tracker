@@ -11,7 +11,7 @@ package testing.coronavirustracker.database;public class ImportDataDTO {
     private int deaths;
     private int recovered;
     private int active;
-    private int stringCombinedKey;
+    private String stringCombinedKey;
     private double incidentRate;
     private double caseFatalityRatio;
 
@@ -20,7 +20,12 @@ package testing.coronavirustracker.database;public class ImportDataDTO {
     }
 
     public void setFips(String fips) {
-        this.fips = Integer.parseInt(fips);
+        try {
+            this.fips = Integer.parseInt(fips);
+        }
+        catch (Exception ex){
+            this.fips = -1;
+        }
     }
 
     public String getAdmin() {
@@ -60,7 +65,12 @@ package testing.coronavirustracker.database;public class ImportDataDTO {
     }
 
     public void setLat(String lat) {
-        this.lat = Double.parseDouble(lat);
+        try {
+            this.lat = Double.parseDouble(lat);
+        }
+        catch (Exception ex){
+            this.lat = -1;
+        }
     }
 
     public double getLongVal() {
@@ -68,7 +78,12 @@ package testing.coronavirustracker.database;public class ImportDataDTO {
     }
 
     public void setLongVal(String longVal) {
-        this.longVal = Double.parseDouble(longVal);
+        try {
+            this.longVal = Double.parseDouble(longVal);
+        }
+        catch (Exception ex){
+            this.longVal = -1;
+        }
     }
 
     public int getConfirmed() {
@@ -100,15 +115,20 @@ package testing.coronavirustracker.database;public class ImportDataDTO {
     }
 
     public void setActive(String active) {
-        this.active = Integer.parseInt(active);
+        try {
+            this.active = Integer.parseInt(active);
+        }
+        catch (Exception ex){
+            this.active = -1;
+        }
     }
 
-    public int getStringCombinedKey() {
+    public String getStringCombinedKey() {
         return stringCombinedKey;
     }
 
     public void setStringCombinedKey(String stringCombinedKey) {
-        this.stringCombinedKey = Integer.parseInt(stringCombinedKey);
+        this.stringCombinedKey = stringCombinedKey;
     }
 
     public double getIncidentRate() {
@@ -116,7 +136,12 @@ package testing.coronavirustracker.database;public class ImportDataDTO {
     }
 
     public void setIncidentRate(String incidentRate) {
-        this.incidentRate = Double.parseDouble(incidentRate);
+        try {
+            this.incidentRate = Double.parseDouble(incidentRate);
+        }
+        catch (Exception ex){
+            this.incidentRate = -1;
+        }
     }
 
     public double getCaseFatalityRatio() {
@@ -124,6 +149,11 @@ package testing.coronavirustracker.database;public class ImportDataDTO {
     }
 
     public void setCaseFatalityRatio(String caseFatalityRatio) {
-        this.caseFatalityRatio = Double.parseDouble(caseFatalityRatio);
+        try {
+            this.caseFatalityRatio = Double.parseDouble(caseFatalityRatio);
+        }
+        catch (Exception ex){
+            this.caseFatalityRatio = -1;
+        }
     }
 }
