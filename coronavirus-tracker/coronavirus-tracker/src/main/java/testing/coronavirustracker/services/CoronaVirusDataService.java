@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 @Service
 public class CoronaVirusDataService {
 
-    private static String VIRUS_DATA_URL = "raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/11-16-2020.csv";
+    private static String VIRUS_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/";
 
     private List<LocationStats> allStats = new ArrayList<>();
 
@@ -37,7 +37,7 @@ public class CoronaVirusDataService {
     @Scheduled(cron = "* * 1 * * *")
     public void fetchVirusData() throws IOException, InterruptedException {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
         var date = sdf.format(new Date());
         String todaysUrl = VIRUS_DATA_URL + date.toString() + ".csv";
 
