@@ -52,39 +52,49 @@ public class CoronaVirusDataService {
 
         //System.out.println(httpResponse.body());
 
-        DataBase db = new DataBase();
-        StringReader csvBodyReader = new StringReader(httpResponse.body());
-        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvBodyReader);
-        for (CSVRecord record : records) {
+        try{
+            DataBase db = new DataBase();
+            db.createConnection();
 
-            ImportDataDTO dto = new ImportDataDTO();
+            StringReader csvBodyReader = new StringReader(httpResponse.body());
+            Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvBodyReader);
+            for (CSVRecord record : records) {
 
-            dto.setFips(record.get("FIPS"));
-            dto.setAdmin(record.get("Admin2"));
-            dto.setProvinceState(record.get("Province_State"));
-            dto.setCountryRegion(record.get("Country_Region"));
-            dto.setLastUpdate(record.get("Last_Update"));
-            dto.setLat(record.get("Lat"));
-            dto.setLongVal(record.get("Long_"));
-            dto.setConfirmed(record.get("Confirmed"));
-            dto.setDeaths(record.get("Deaths"));
-            dto.setRecovered(record.get("Recovered"));
-            dto.setActive(record.get("Active"));
-            dto.setStringCombinedKey(record.get("Combined_Key"));
-            dto.setIncidentRate(record.get("Incident_Rate"));
-            dto.setCaseFatalityRatio(record.get("Case_Fatality_Ratio"));
+                ImportDataDTO dto = new ImportDataDTO();
 
-            //db.insertData(dto);
+                dto.setFips(record.get("FIPS"));
+                dto.setAdmin(record.get("Admin2"));
+                dto.setProvinceState(record.get("Province_State"));
+                dto.setCountryRegion(record.get("Country_Region"));
+                dto.setLastUpdate(record.get("Last_Update"));
+                dto.setLat(record.get("Lat"));
+                dto.setLongVal(record.get("Long_"));
+                dto.setConfirmed(record.get("Confirmed"));
+                dto.setDeaths(record.get("Deaths"));
+                dto.setRecovered(record.get("Recovered"));
+                dto.setActive(record.get("Active"));
+                dto.setCombinedKey(record.get("Combined_Key"));
+                dto.setIncidentRate(record.get("Incident_Rate"));
+                dto.setCaseFatalityRatio(record.get("Case_Fatality_Ratio"));
 
-            /*LocationStats locationStats = new LocationStats();
-            locationStats.setState(record.get("Province_State"));
-            locationStats.setCountry(record.get("Country_Region"));
-            //locationStats.setLatestTotalCases(Integer.parseInt(record.get(record.size() - 1)));
-            locationStats.setLatestTotalCases(Integer.parseInt(record.get("Confirmed")));
-            //System.out.println(locationStats);
-            newStats.add(locationStats);*/
+                db.insertData(dto);
 
+                /*LocationStats locationStats = new LocationStats();
+                locationStats.setState(record.get("Province_State"));
+                locationStats.setCountry(record.get("Country_Region"));
+                //locationStats.setLatestTotalCases(Integer.parseInt(record.get(record.size() - 1)));
+                locationStats.setLatestTotalCases(Integer.parseInt(record.get("Confirmed")));
+                //System.out.println(locationStats);
+                newStats.add(locationStats);*/
+
+            }
+
+            db.shutdown();
+            this.allStats = newStats;
         }
-        this.allStats = newStats;
+        catch (Exception except)
+        {
+            except.printStackTrace();
+        }
     }
 }

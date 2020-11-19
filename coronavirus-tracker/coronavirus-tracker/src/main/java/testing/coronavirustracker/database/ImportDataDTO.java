@@ -11,7 +11,7 @@ package testing.coronavirustracker.database;public class ImportDataDTO {
     private int deaths;
     private int recovered;
     private int active;
-    private String stringCombinedKey;
+    private String combinedKey;
     private double incidentRate;
     private double caseFatalityRatio;
 
@@ -123,12 +123,12 @@ package testing.coronavirustracker.database;public class ImportDataDTO {
         }
     }
 
-    public String getStringCombinedKey() {
-        return stringCombinedKey;
+    public String getCombinedKey() {
+        return combinedKey;
     }
 
-    public void setStringCombinedKey(String stringCombinedKey) {
-        this.stringCombinedKey = stringCombinedKey;
+    public void setCombinedKey(String stringCombinedKey) {
+        this.combinedKey = stringCombinedKey;
     }
 
     public double getIncidentRate() {

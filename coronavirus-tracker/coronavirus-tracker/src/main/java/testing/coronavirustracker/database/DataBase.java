@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSetMetaData;
 
+import testing.coronavirustracker.services.CoronaVirusDataService;
 // if intellij is crying about missing jars, manually import derby.jar, derbyclient.jar, derbynet.jar, derbytools.jar
 // at file->project structure->modules->dependencies
 public class DataBase {
@@ -18,11 +19,11 @@ public class DataBase {
     public static void main(String[] args)
     {
         // run startNetworkServer -h 0.0.0.0 from derby/bin before attempting to connect!
-        createConnection();
-        shutdown();
+        //createConnection();
+        //shutdown();
     }
 
-    private static void createConnection()
+    public static void createConnection()
     {
         try
         {
@@ -40,7 +41,20 @@ public class DataBase {
       try
         {
             stmt = conn.createStatement();
-            String sql = "";
+            String sql = "INSERT INTO import_data VALUES("
+                             + dto.getFips() + ", "
+                             + dto.getAdmin() + ", "
+                             + dto.getProvinceState() + ", "
+                             + dto.getLastUpdate() + ", "
+                             + dto.getLat() + ", "
+                             + dto.getLongVal() + ", "
+                             + dto.getConfirmed() + ", "
+                             + dto.getDeaths() + ", "
+                             + dto.getRecovered() + ", "
+                             + dto.getActive() + ", "
+                             + dto.getCombinedKey() + ", "
+                             + dto.getIncidentRate() + ", "
+                             + dto.getCaseFatalityRatio() + ")";
 
             stmt.executeUpdate(sql);
             stmt.close();
@@ -58,7 +72,7 @@ public class DataBase {
         {
             stmt = conn.createStatement();
             String sql = "CREATE TABLE import_table\n" +
-                            "(id INTEGER not NULL,\n" +
+                            "(ID int NOT NULL GENERATED ALWAYS AS IDENTITY,\n" +
                             "FIPS INTEGER,\n" +
                             "Admin2 VARCHAR(500),\n" +
                             "Province_State VARCHAR(500),\n" +
@@ -85,7 +99,7 @@ public class DataBase {
         }
     }
 
-    private static void shutdown()
+    public static void shutdown()
     {
         try
         {
