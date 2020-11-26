@@ -1,10 +1,18 @@
-package testing.coronavirustracker.database;public class ImportDataDTO {
+package testing.coronavirustracker.database;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.sql.Date;
+//import java.util.Date;
+import java.util.Locale;
+
+public class ImportDataDTO {
 
     private int fips;
     private String admin;
     private String provinceState;
     private String countryRegion;
-    private String lastUpdate;
+    private java.sql.Date lastUpdate;
     private double lat;
     private double longVal;
     private int confirmed;
@@ -20,11 +28,17 @@ package testing.coronavirustracker.database;public class ImportDataDTO {
     }
 
     public void setFips(String fips) {
-        try {
-            this.fips = Integer.parseInt(fips);
-        }
-        catch (Exception ex){
+//        try {
+//            this.fips = Integer.parseInt(fips);
+//        }
+//        catch (Exception ex){
+//            this.fips = -1;
+//        }
+        if (fips == "" || fips.isEmpty()) {
             this.fips = -1;
+        }
+        else{
+            this.fips = Integer.parseInt(fips);
         }
     }
 
@@ -33,7 +47,12 @@ package testing.coronavirustracker.database;public class ImportDataDTO {
     }
 
     public void setAdmin(String admin) {
-        this.admin = admin;
+        if (admin == "" || admin.isEmpty()) {
+            this.admin = "empty";
+        }
+        else{
+            this.admin = admin;
+        }
     }
 
     public String getProvinceState() {
@@ -41,7 +60,12 @@ package testing.coronavirustracker.database;public class ImportDataDTO {
     }
 
     public void setProvinceState(String provinceState) {
-        this.provinceState = provinceState;
+        if (provinceState == "" || provinceState.isEmpty()) {
+            this.provinceState = "province is empty";
+        }
+        else{
+            this.provinceState = provinceState;
+        }
     }
 
     public String getCountryRegion() {
@@ -52,12 +76,23 @@ package testing.coronavirustracker.database;public class ImportDataDTO {
         this.countryRegion = countryRegion;
     }
 
-    public String getLastUpdate() {
+    public java.sql.Date getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(String lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    public java.sql.Date convertJavaDateToSqlDate(java.util.Date date) {
+        return new java.sql.Date(date.getTime());
+    }
+
+    public void setLastUpdate(String lastUpdate) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        java.util.Date tmp = format.parse(lastUpdate);
+        //System.out.println("tmp date: " + tmp);
+        SimpleDateFormat format_new = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date = format_new.format(tmp);
+        //System.out.println("date: " + date);
+        //System.out.println("last update: " + convertJavaDateToSqlDate(format_new.parse(date)));
+        this.lastUpdate = convertJavaDateToSqlDate(format_new.parse(date));
     }
 
     public double getLat() {

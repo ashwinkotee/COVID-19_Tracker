@@ -3,11 +3,11 @@ package testing.coronavirustracker.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+import testing.coronavirustracker.database.DataBase;
 import testing.coronavirustracker.models.LocationStats;
 import testing.coronavirustracker.services.CoronaVirusDataService;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.*;
@@ -18,7 +18,7 @@ public class HomeController {
     @Autowired
     CoronaVirusDataService coronaVirusDataService;
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public String home(Model model){
         List<LocationStats> allStats = coronaVirusDataService.getAllStats();
         int totalReportedCases = allStats.stream().mapToInt(stat -> stat.getLatestTotalCases()).sum();
@@ -26,18 +26,19 @@ public class HomeController {
         model.addAttribute("totalReportedCases", totalReportedCases);
         return "home";
     }
-/*
-    @GetMapping("/home/{country}}")
-    @ResponseBody
-    public List<String> country(@PathVariable String country) {
-        List<String> allStats = coronaVirusDataService.getData();
-        List<String> countryStats = allStats.stream().filter(stat -> stat.equals(country))
-                                    .collect(Collectors.toCollection(ArrayList::new));
 
-        return countryStats;
+    @RequestMapping("/{country}")
+    public @ResponseBody String getCountry(@PathVariable(value = "country") String country) {
+        DataBase db = new DataBase();
+        db.createConnection();
+        db.fetchData(country);
+        //System.out.println("Get mapping country");
+        return country;
     }
 
-    @GetMapping("/home/{country}/totalDeaths}")
+
+
+/*    @GetMapping("/home/{country}/totalDeaths}")
     @ResponseBody
     public int countryDeaths(@PathVariable String  country) {
         List<String> allStats = coronaVirusDataService.getData();

@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 public class CoronaVirusDataService {
 
     private static String VIRUS_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/";
-
+    //private static String VIRUS_DATA_URL = "https://raw.githubusercontent.com/ntvuong/testingurl/main/test.csv";
     private List<LocationStats> allStats = new ArrayList<>();
 
     public List<LocationStats> getAllStats() {
@@ -42,6 +42,7 @@ public class CoronaVirusDataService {
         //String todaysUrl = VIRUS_DATA_URL + date.toString() + ".csv";
         //I gave todaysUrl the exact date in order to test if the data is inserted into the DB
         String todaysUrl = VIRUS_DATA_URL + "11-16-2020.csv";
+        //String todaysUrl = VIRUS_DATA_URL;
 
         List<LocationStats> newStats = new ArrayList<>();
         HttpClient client = HttpClient.newHttpClient();
@@ -52,17 +53,21 @@ public class CoronaVirusDataService {
 
         //System.out.println(httpResponse.body());
 
-        try{
+        //try{
             DataBase db = new DataBase();
             db.createConnection();
-
+            db.setupTables();
+            //db.setupTestTable();
+        try{
             StringReader csvBodyReader = new StringReader(httpResponse.body());
             Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvBodyReader);
             for (CSVRecord record : records) {
 
                 ImportDataDTO dto = new ImportDataDTO();
+                ImportDataDTO dto1 = new ImportDataDTO();
 
                 dto.setFips(record.get("FIPS"));
+                System.out.println("FIPS test:" + record.get("FIPS"));
                 dto.setAdmin(record.get("Admin2"));
                 dto.setProvinceState(record.get("Province_State"));
                 dto.setCountryRegion(record.get("Country_Region"));
@@ -77,7 +82,12 @@ public class CoronaVirusDataService {
                 dto.setIncidentRate(record.get("Incident_Rate"));
                 dto.setCaseFatalityRatio(record.get("Case_Fatality_Ratio"));
 
+                //dto1.setFips(record.get("FIPS"));
+                //dto1.setCountryRegion(record.get("Country_Region"));
                 db.insertData(dto);
+                //db.selectData(dto1);
+
+                //db.insertData(dto);
 
                 /*LocationStats locationStats = new LocationStats();
                 locationStats.setState(record.get("Province_State"));
@@ -88,13 +98,15 @@ public class CoronaVirusDataService {
                 newStats.add(locationStats);*/
 
             }
-
-            db.shutdown();
+            //db.fetchData("US");
+            //db.shutdown();
             this.allStats = newStats;
         }
         catch (Exception except)
         {
             except.printStackTrace();
         }
+        //db.fetchData();
+        db.shutdown();
     }
 }
