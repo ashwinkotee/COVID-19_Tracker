@@ -27,14 +27,26 @@ public class CoronaVirusDataService {
 
     private static String VIRUS_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/";
     //private static String VIRUS_DATA_URL = "https://raw.githubusercontent.com/ntvuong/testingurl/main/test.csv";
+
+    private static String VIRUS_GLOBAL_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
+    private static String VIRUS_GLOBAL_DEATHS_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+    private static String VIRUS_GLOBAL_RECOVERED_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
+    private List<LocationStats> allStatsDeaths = new ArrayList<>();
+    private List<LocationStats> allStatsRecovered = new ArrayList<>();
     private List<LocationStats> allStats = new ArrayList<>();
 
     public List<LocationStats> getAllStats() {
         return allStats;
     }
+    public List<LocationStats> getAllStatsDeaths() {
+        return allStatsDeaths;
+    }
+    public List<LocationStats> getAllStatsRecovered() {
+        return allStatsRecovered;
+    }
 
     @PostConstruct
-    @Scheduled(cron = "* * 1 * * *")
+    //@Scheduled(cron = "* * 1 * * *")
     public void fetchVirusData() throws IOException, InterruptedException {
 
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
@@ -44,7 +56,7 @@ public class CoronaVirusDataService {
         String todaysUrl = VIRUS_DATA_URL + "11-16-2020.csv";
         //String todaysUrl = VIRUS_DATA_URL;
 
-        List<LocationStats> newStats = new ArrayList<>();
+        //List<LocationStats> newStats = new ArrayList<>();
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(todaysUrl))
@@ -89,18 +101,18 @@ public class CoronaVirusDataService {
 
                 //db.insertData(dto);
 
-                /*LocationStats locationStats = new LocationStats();
-                locationStats.setState(record.get("Province_State"));
-                locationStats.setCountry(record.get("Country_Region"));
-                //locationStats.setLatestTotalCases(Integer.parseInt(record.get(record.size() - 1)));
-                locationStats.setLatestTotalCases(Integer.parseInt(record.get("Confirmed")));
-                //System.out.println(locationStats);
-                newStats.add(locationStats);*/
+//                LocationStats locationStats = new LocationStats();
+//                locationStats.setState(record.get("Province_State"));
+//                locationStats.setCountry(record.get("Country_Region"));
+//                //locationStats.setLatestTotalCases(Integer.parseInt(record.get(record.size() - 1)));
+//                locationStats.setLatestTotalCases(Integer.parseInt(record.get("Confirmed")));
+//                //System.out.println(locationStats);
+//                newStats.add(locationStats);
 
             }
             //db.fetchData("US");
             //db.shutdown();
-            this.allStats = newStats;
+            //this.allStats = newStats;
         }
         catch (Exception except)
         {
@@ -108,5 +120,98 @@ public class CoronaVirusDataService {
         }
         //db.fetchData();
         db.shutdown();
+    }
+
+    @PostConstruct
+    @Scheduled(cron = "* * 1 * * *")
+    public void fetchGlobalData() throws IOException, InterruptedException {
+        String globalURL = VIRUS_GLOBAL_DATA_URL;
+        String globalDeathURL = VIRUS_GLOBAL_DEATHS_URL;
+        String globalRecoveredURL = VIRUS_GLOBAL_RECOVERED_URL;
+        int latestGlobalCases = 0;
+        int latestGlobalDeaths = 0;
+        int latestGlobalRecovered = 0;
+
+        List<LocationStats> newStatsGlobal = new ArrayList<>();
+        List<LocationStats> newStatsGlobalDeaths = new ArrayList<>();
+        List<LocationStats> newStatsGlobalRecovered = new ArrayList<>();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest requestGlobal = HttpRequest.newBuilder()
+                .uri(URI.create(globalURL))
+                .build();
+        HttpResponse<String> httpResponse_Global = client.send(requestGlobal, HttpResponse.BodyHandlers.ofString());
+        HttpRequest requestGlobalDeaths = HttpRequest.newBuilder()
+                .uri(URI.create(globalDeathURL))
+                .build();
+        HttpResponse<String> httpResponse_Global_Deaths = client.send(requestGlobalDeaths, HttpResponse.BodyHandlers.ofString());
+        HttpRequest requestGlobalRecovered = HttpRequest.newBuilder()
+                .uri(URI.create(globalRecoveredURL))
+                .build();
+        HttpResponse<String> httpResponse_Global_Recovered = client.send(requestGlobalRecovered, HttpResponse.BodyHandlers.ofString());
+
+        //System.out.println(httpResponse.body());
+
+        try{
+            StringReader csvBodyReader = new StringReader(httpResponse_Global.body());
+            Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvBodyReader);
+            for (CSVRecord record : records) {
+
+                LocationStats locationStats = new LocationStats();
+                locationStats.setState(record.get("Province/State"));
+                locationStats.setCountry(record.get("Country/Region"));
+                latestGlobalCases = Integer.parseInt(record.get(record.size() - 1));
+                locationStats.setLatestTotalCases(latestGlobalCases);
+                //System.out.println(locationStats);
+                newStatsGlobal.add(locationStats);
+
+            }
+            this.allStats = newStatsGlobal;
+        }
+        catch (Exception except)
+        {
+            except.printStackTrace();
+        }
+
+        try{
+            StringReader csvBodyReader = new StringReader(httpResponse_Global_Deaths.body());
+            Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvBodyReader);
+            for (CSVRecord record : records) {
+
+                LocationStats locationStats = new LocationStats();
+                //locationStats.setState(record.get("Province/State"));
+                //locationStats.setCountry(record.get("Country/Region"));
+                latestGlobalDeaths = Integer.parseInt(record.get(record.size() - 1));
+                locationStats.setLatestTotalDeaths(latestGlobalDeaths);
+                //System.out.println(locationStats);
+                newStatsGlobalDeaths.add(locationStats);
+
+            }
+            this.allStatsDeaths = newStatsGlobalDeaths;
+        }
+        catch (Exception except)
+        {
+            except.printStackTrace();
+        }
+
+        try{
+            StringReader csvBodyReader = new StringReader(httpResponse_Global_Recovered.body());
+            Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvBodyReader);
+            for (CSVRecord record : records) {
+
+                LocationStats locationStats = new LocationStats();
+                //locationStats.setState(record.get("Province/State"));
+                //locationStats.setCountry(record.get("Country/Region"));
+                latestGlobalRecovered = Integer.parseInt(record.get(record.size() - 1));
+                locationStats.setLatestTotalRecovered(latestGlobalRecovered);
+                //System.out.println(locationStats);
+                newStatsGlobalRecovered.add(locationStats);
+
+            }
+            this.allStatsRecovered = newStatsGlobalRecovered;
+        }
+        catch (Exception except)
+        {
+            except.printStackTrace();
+        }
     }
 }

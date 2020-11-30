@@ -5,6 +5,25 @@ public class LocationStats {
     private String state;
     private String country;
     private int latestTotalCases;
+    private int latestTotalDeaths;
+    private int latestTotalRecovered;
+
+    public int getLatestTotalDeaths() {
+        return latestTotalDeaths;
+    }
+
+    public void setLatestTotalDeaths(int latestTotalDeaths) {
+        this.latestTotalDeaths = latestTotalDeaths;
+    }
+
+    public int getLatestTotalRecovered() {
+        return latestTotalRecovered;
+    }
+
+    public void setLatestTotalRecovered(int latestTotalRecovered) {
+        this.latestTotalRecovered = latestTotalRecovered;
+    }
+
 
     public String getState() {
         return state;

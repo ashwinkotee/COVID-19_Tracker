@@ -1,5 +1,6 @@
 package testing.coronavirustracker.controllers;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,22 +19,36 @@ public class HomeController {
     @Autowired
     CoronaVirusDataService coronaVirusDataService;
 
-    @GetMapping("/home")
-    public String home(Model model){
+    @RequestMapping("/Global")
+    public @ResponseBody String Global(){
+        List<LocationStats> allStatsDeaths = coronaVirusDataService.getAllStatsDeaths();
+        List<LocationStats> allStatsRecovered = coronaVirusDataService.getAllStatsRecovered();
         List<LocationStats> allStats = coronaVirusDataService.getAllStats();
         int totalReportedCases = allStats.stream().mapToInt(stat -> stat.getLatestTotalCases()).sum();
-        model.addAttribute("locationStats", allStats);
-        model.addAttribute("totalReportedCases", totalReportedCases);
-        return "home";
+        int totalReportedDeaths = allStatsDeaths.stream().mapToInt(stat -> stat.getLatestTotalDeaths()).sum();
+        int totalReportedRecovered = allStatsRecovered.stream().mapToInt(stat -> stat.getLatestTotalRecovered()).sum();
+        JSONObject globalData = new JSONObject();
+        JSONObject data = new JSONObject();
+        globalData.put("Confirmed", totalReportedCases);
+        globalData.put("Deaths", totalReportedDeaths);
+        globalData.put("Recovered", totalReportedRecovered);
+        data.put("Global", globalData);
+        //model.addAttribute("locationStats", allStats);
+        //model.addAttribute("totalReportedCases", totalReportedCases);
+//        String confirmed = Integer.toString(totalReportedCases);
+//        String deaths = Integer.toString(totalReportedDeaths);
+//        String recovered = Integer.toString(totalReportedRecovered);
+//        return confirmed + " " + deaths + " " + recovered;
+        return data.toString();
     }
 
     @RequestMapping("/{country}")
     public @ResponseBody String getCountry(@PathVariable(value = "country") String country) {
         DataBase db = new DataBase();
         db.createConnection();
-        db.fetchData(country);
+        return db.fetchData(country).toString();
         //System.out.println("Get mapping country");
-        return country;
+        //return country;
     }
 
 

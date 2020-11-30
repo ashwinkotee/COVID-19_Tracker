@@ -84,7 +84,7 @@ public class DataBase {
         }
     }
 
-    public static void fetchData(String countryName)
+    public static JSONObject fetchData(String countryName)
     {
         try {
             stmt = conn.createStatement();
@@ -93,12 +93,18 @@ public class DataBase {
             ResultSetMetaData rsmd = results.getMetaData();
             int numberCols = rsmd.getColumnCount();
             List<JSONObject> objects = new ArrayList<>();
+            JSONObject data = new JSONObject();
+            JSONObject fullData = new JSONObject();
+            String country_name = "";
             JSONArray listArr = new JSONArray();
             for (int i=1; i<=numberCols; i++) {
                 //print Column Names
                 System.out.print(rsmd.getColumnLabel(i) + "\t\t");
             }
-
+            int a = 0;//Stands for num of confirmed cases
+            int b = 0;//Stands for num of deaths
+            int c = 0;//Stands for num of recovered
+            int d = 0;//Stands for num of active
             System.out.println("\n-------------------------------------------------");
 
             //if (results.next()) {
@@ -113,6 +119,7 @@ public class DataBase {
                 String province_state = results.getString(4).trim();
                 //jsonObject.put(rsmd.getColumnName(4), province_state);
                 String country = results.getString(5).trim();
+                country_name = country;
                 //jsonObject.put(rsmd.getColumnName(5), country);
                 Date date = results.getDate(6);
                 //jsonObject.put(rsmd.getCatalogName(6), date);
@@ -122,12 +129,16 @@ public class DataBase {
                 //jsonObject.put(rsmd.getCatalogName(8), long_);
                 int confirmed = Integer.parseInt(results.getString(9).trim());
                 jsonObject.put(rsmd.getColumnName(9), confirmed);
+                a += confirmed;
                 int deaths = Integer.parseInt(results.getString(10).trim());
                 jsonObject.put(rsmd.getColumnName(10), deaths);
+                b += deaths;
                 int recovered = Integer.parseInt(results.getString(11).trim());
                 jsonObject.put(rsmd.getColumnName(11), recovered);
+                c += recovered;
                 int active = Integer.parseInt(results.getString(12).trim());
                 jsonObject.put(rsmd.getColumnName(12), active);
+                d += active;
                 String combinedKey = results.getString(13);
                 //jsonObject.put(rsmd.getCatalogName(13), combinedKey);
                 double incidentRate = results.getDouble(14);
@@ -152,23 +163,36 @@ public class DataBase {
                         active + "\t\t" + combinedKey + "\t\t" + incidentRate + "\t\t" +
                         caseFatal);// + "\t\t" + admin + "\t\t" + province_state + "\t\t" + country);
             }
+            for (int i = 0; i < listArr.length(); i++)
+            {
+                //System.out.println("LENGTH OF THE ARRAY: " + listArr.length());
+                //listArr.get(i).
+            }
+            System.out.println("TOTAL CONFIRMED: " + a);
+            System.out.println("TOTAL DEATHS: " + b);
+            System.out.println("TOTAL RECOVERED: " + c);
+            System.out.println("TOTAL ACTIVE: " + d);
+            data.put("CONFIRMED", a);
+            data.put("DEATHS", b);
+            data.put("RECOVERED", c);
+            data.put("ACTIVE", d);
+            fullData.put(country_name, data);
+            //System.out.println(fullData);
             results.close();
-
 //            for (int i = 0; i < objects.size(); i++)
 //            {
 //                System.out.println(objects.get(i));
 //            }
 //            System.out.println(objects);
-            System.out.println(listArr);
+            //System.out.println(listArr);
             stmt.close();
-            //}
-            //else {
-            //    System.out.println("results is empty");
-            //}
+            System.out.println(fullData);
+            return fullData;
         }
         catch (SQLException sqlExcept){
             sqlExcept.printStackTrace();
         }
+        return null;
     }
 
     public static void setupTables()
