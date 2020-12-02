@@ -68,11 +68,11 @@ public class HomeController {
     }
 
     @CrossOrigin
-    @RequestMapping("/news")
-    public @ResponseBody String getNews(){
+    @RequestMapping("/{country}/news")
+    public @ResponseBody String getNews(@PathVariable(value = "country") String country){
         CoronaVirusDataService cvds = new CoronaVirusDataService();
         try {
-            return cvds.fetchNews();
+            return cvds.fetchNews(country);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

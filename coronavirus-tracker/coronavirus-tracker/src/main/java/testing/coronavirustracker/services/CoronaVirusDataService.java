@@ -31,7 +31,7 @@ public class CoronaVirusDataService {
     private static String VIRUS_GLOBAL_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
     private static String VIRUS_GLOBAL_DEATHS_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
     private static String VIRUS_GLOBAL_RECOVERED_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
-    private static String NEWS_URL = "https://api.coronatracker.com/news/trending?limit=5&country=India";
+    private static String NEWS_URL = "https://api.coronatracker.com/news/trending?limit=5&country=";
 
     private List<LocationStats> allStatsDeaths = new ArrayList<>();
     private List<LocationStats> allStatsRecovered = new ArrayList<>();
@@ -47,11 +47,11 @@ public class CoronaVirusDataService {
         return allStatsRecovered;
     }
 
-    @PostConstruct
-    public String fetchNews() throws IOException, InterruptedException{
+    //@PostConstruct
+    public String fetchNews(String country) throws IOException, InterruptedException{
         HttpClient news_client = HttpClient.newHttpClient();
         HttpRequest news_request = HttpRequest.newBuilder()
-                .uri(URI.create(NEWS_URL))
+                .uri(URI.create(NEWS_URL + country))
                 .build();
         HttpResponse<String> news_httpResponse = news_client.send(news_request, HttpResponse.BodyHandlers.ofString());
         return news_httpResponse.body();
