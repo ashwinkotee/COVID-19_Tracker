@@ -1,5 +1,6 @@
 package testing.coronavirustracker.controllers;
 
+import org.apache.catalina.connector.Response;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import testing.coronavirustracker.database.DataBase;
 import testing.coronavirustracker.models.LocationStats;
 import testing.coronavirustracker.services.CoronaVirusDataService;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.*;
@@ -19,6 +21,7 @@ public class HomeController {
     @Autowired
     CoronaVirusDataService coronaVirusDataService;
 
+    @CrossOrigin
     @RequestMapping("/Global")
     public @ResponseBody String Global(){
         List<LocationStats> allStatsDeaths = coronaVirusDataService.getAllStatsDeaths();
@@ -42,6 +45,7 @@ public class HomeController {
         return data.toString();
     }
 
+    @CrossOrigin
     @RequestMapping("/{country}")
     public @ResponseBody String getCountry(@PathVariable(value = "country") String country) {
         DataBase db = new DataBase();
@@ -51,7 +55,31 @@ public class HomeController {
         //return country;
     }
 
+    @CrossOrigin
+    @RequestMapping("/{date}/{country}")
+    public @ResponseBody String getCountryWithDate(@PathVariable(value = "date") String date, @PathVariable(value = "country") String country) throws IOException, InterruptedException {
+        CoronaVirusDataService cvds = new CoronaVirusDataService();
+        cvds.fetchVirusDataWithDate(date);
+        DataBase db = new DataBase();
+        db.createConnection();
+        return db.fetchData(country).toString();
+        //System.out.println("Get mapping country");
+        //return country;
+    }
 
+    @CrossOrigin
+    @RequestMapping("/news")
+    public @ResponseBody String getNews(){
+        CoronaVirusDataService cvds = new CoronaVirusDataService();
+        try {
+            return cvds.fetchNews();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "ERROR: There are some problems with news";
+    }
 
 /*    @GetMapping("/home/{country}/totalDeaths}")
     @ResponseBody
