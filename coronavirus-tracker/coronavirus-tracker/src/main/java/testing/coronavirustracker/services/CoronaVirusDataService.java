@@ -2,6 +2,8 @@ package testing.coronavirustracker.services;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -16,11 +18,10 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
+import java.util.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.stream.Collectors;
 
 @Service
 public class CoronaVirusDataService {
@@ -47,6 +48,8 @@ public class CoronaVirusDataService {
         return allStatsRecovered;
     }
 
+    HashMap<String, Integer> map = new HashMap<>();
+
     //@PostConstruct
     public String fetchNews(String country) throws IOException, InterruptedException{
         HttpClient news_client = HttpClient.newHttpClient();
@@ -55,6 +58,20 @@ public class CoronaVirusDataService {
                 .build();
         HttpResponse<String> news_httpResponse = news_client.send(news_request, HttpResponse.BodyHandlers.ofString());
         return news_httpResponse.body();
+    }
+
+    private HashMap<String, Integer> sortByValue(HashMap<String, Integer> unsortMap, final boolean order)
+    {
+        List<Map.Entry<String, Integer>> list = new LinkedList<>(unsortMap.entrySet());
+
+        // Sorting the list based on values
+        list.sort((o1, o2) -> order ? o1.getValue().compareTo(o2.getValue()) == 0
+                ? o1.getKey().compareTo(o2.getKey())
+                : o1.getValue().compareTo(o2.getValue()) : o2.getValue().compareTo(o1.getValue()) == 0
+                ? o2.getKey().compareTo(o1.getKey())
+                : o2.getValue().compareTo(o1.getValue()));
+        return list.stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> b, LinkedHashMap::new));
+
     }
 
     @PostConstruct
@@ -175,7 +192,7 @@ public class CoronaVirusDataService {
                 locationStats.setLatestTotalCases(latestGlobalCases);
                 //System.out.println(locationStats);
                 newStatsGlobal.add(locationStats);
-
+                map.put(record.get(1), latestGlobalCases);
             }
             this.allStats = newStatsGlobal;
         }
@@ -225,7 +242,70 @@ public class CoronaVirusDataService {
         {
             except.printStackTrace();
         }
+
+        //System.out.println(map);
     }
+
+    @PostConstruct
+    @Scheduled(cron = "* * 1 * * *")
+    public JSONArray fetchMap() throws IOException, InterruptedException {
+        String globalURL = VIRUS_GLOBAL_DATA_URL;
+        int latestGlobalCases = 0;
+
+        List<LocationStats> newStatsGlobal = new ArrayList<>();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest requestGlobal = HttpRequest.newBuilder()
+                .uri(URI.create(globalURL))
+                .build();
+        HttpResponse<String> httpResponse_Global = client.send(requestGlobal, HttpResponse.BodyHandlers.ofString());
+
+        //System.out.println(httpResponse.body());
+
+        try{
+            StringReader csvBodyReader = new StringReader(httpResponse_Global.body());
+            Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvBodyReader);
+            for (CSVRecord record : records) {
+
+                LocationStats locationStats = new LocationStats();
+                locationStats.setState(record.get("Province/State"));
+                locationStats.setCountry(record.get("Country/Region"));
+                latestGlobalCases = Integer.parseInt(record.get(record.size() - 1));
+                locationStats.setLatestTotalCases(latestGlobalCases);
+                //System.out.println(locationStats);
+                newStatsGlobal.add(locationStats);
+                map.put(record.get(1), latestGlobalCases);
+            }
+            this.allStats = newStatsGlobal;
+        }
+        catch (Exception except)
+        {
+            except.printStackTrace();
+        }
+
+        //System.out.println(map);
+        HashMap<String, Integer> sortedMap = sortByValue(map, false);
+        //System.out.println(sortedMap);
+
+        JSONArray jsonArray = new JSONArray();
+        int cnt = 0;
+        for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
+            JSONObject top10Data = new JSONObject();
+            String k = entry.getKey();
+            top10Data.put("Country", k);
+            int v = entry.getValue();
+            top10Data.put("Confirmed", v);
+            jsonArray.put(top10Data);
+            //System.out.println("Country: " + k + ", Confirmed: " + v);
+            cnt++;
+            if (cnt == 10)
+                break;
+        }
+        //System.out.println(jsonArray);
+        return jsonArray;
+    }
+
+
+
 
     //@PostConstruct
     //@Scheduled(cron = "* * 1 * * *")
@@ -261,7 +341,7 @@ public class CoronaVirusDataService {
                 //ImportDataDTO dto1 = new ImportDataDTO();
 
                 dto.setFips(record.get("FIPS"));
-                System.out.println("FIPS test:" + record.get("FIPS"));
+                //System.out.println("FIPS test:" + record.get("FIPS"));
                 dto.setAdmin(record.get("Admin2"));
                 dto.setProvinceState(record.get("Province_State"));
                 dto.setCountryRegion(record.get("Country_Region"));

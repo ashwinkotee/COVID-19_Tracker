@@ -81,6 +81,21 @@ public class HomeController {
         return "ERROR: There are some problems with news";
     }
 
+    @CrossOrigin
+    @RequestMapping("/top10")
+    public @ResponseBody String getTop10(){
+        CoronaVirusDataService cvds = new CoronaVirusDataService();
+        try {
+            return cvds.fetchMap().toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return "ERROR: There are some problems with top ten data";
+    }
+
 /*    @GetMapping("/home/{country}/totalDeaths}")
     @ResponseBody
     public int countryDeaths(@PathVariable String  country) {
