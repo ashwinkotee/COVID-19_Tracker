@@ -399,6 +399,16 @@
             xmlhttp.open("GET", "http://api.coronatracker.com/v2/analytics/country" , true);
             xmlhttp.send();
             </script>
+         <script>
+          var d = new Date();
+          var month = d.getMonth()+1;
+          var day = d.getDate();
+          var output = d.getFullYear() + '-' +
+          ((''+month).length<2 ? '0' : '') + month + '-' +
+          ((''+day).length<2 ? '0' : '') + day;
+          // document.getElementById("date").innerHTML = "https://api.covid19tracking.narrativa.com/api/" + output +"/country/Global";
+         </script>
+
 
 
 </html>
