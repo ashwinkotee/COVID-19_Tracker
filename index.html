@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<div>
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -50,14 +48,11 @@
     </div>
   </div>
 </nav>
-<div class="p-3 mb-2 bg-light text-dark">
+<div  class="p-3 mb-2 bg-light text-dark">
 <div class="container-fluid ">
 <div class="py-5">
   <div class="row">
     <div class="col">
-    </div>
-    <div class="col-6">
-      <input class="form-control form-control-lg" type="text" placeholder="Search" aria-label="Search">
     </div>
     <div class="col">
     </div>
@@ -65,7 +60,7 @@
   <div class="py-4">
     <div class="row">
       <div class="col text-centre">
-        <h2 class="text-center" id="Country_Name"></h2>
+          <h2 class="text-center" id="Country_Name"></h2>
       </div>
     </div>
   </div>
@@ -74,6 +69,7 @@
 
   <div class="card p-4" >
     <div class="row p-4">
+      <script src="main.js"></script>
       <div class="col-lg-6 col-xl-3">
         <div class="card">
           <div class="card-body">
@@ -128,21 +124,9 @@
       </div>
     </div>
   </div>
+</div>
 
-<!--<script>-->
-<!--            var xmlhttp = new XMLHttpRequest();-->
-<!--            var stored_image;-->
-<!--            xmlhttp.onreadystatechange = function() {-->
-<!--              if (this.readyState == 4 && this.status == 200) {-->
-<!--                var myArr = JSON.parse(this.responseText);-->
-<!--                document.getElementById("urlToImage_1").innerHTML = myArr.items[1].urlToImage;-->
-<!--              }-->
-<!--            };-->
-<!--            xmlhttp.open("GET", "http://api.coronatracker.com/news/trending?limit=5&country=India", true);-->
-<!--            xmlhttp.send();-->
-<!--            </script>-->
-
-<!--  Chart-->
+<!--  Chart and Table--> 
 <div class="container-fluid p-5">
   <div class="row p-7">
     <div class="col-8">
@@ -153,46 +137,22 @@
           </div>
         </div>
       </div>
+      <script type="text/javascript" src="Chart.js"></script><br>
     </div>
     <div class="col-4">
-      <table class="table">
-        <thead class="thead-dark">
-        <tr>
-          <th scope="col" >ID</th>
-          <th scope="col">Country</th>
-          <th scope="col">confirmed</th>
-          <th scope="col">Death</th>
-          <th scope="col">Recovered</th>
-
+      <table class="table table-striped">
+        <tr  class="bg-info">
+          <th>Country Name</th>
+          <th>Confirmed</th>
+          <th>Deaths</th>
+          <th>Recovered</th>
         </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td id="countryName"></td>
-          <td id="confirmed_Table"></td>
-          <td id="Deaths_Table"></td>
-          <td id="Recovered_Table"></td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-        </tr>
-        </tbody>
+        <tbody id="myTable"></tbody>
       </table>
   </div>
   </div>
 </div>
 
-  
 <div class="row">
   <div class="col-8">
     <h2 class="text-center">News</h2>
@@ -202,7 +162,7 @@
           <div class="row">
             <div class="col grid-margin">
               <a href="" id="url_1">
-                <h2 class="mb-2 font-weight-600" id="title1">
+                <h2 class="text-dark" class="mb-2 font-weight-600" id="title1">
                 </h2>
               </a>
 
@@ -221,8 +181,8 @@
       <div class="card-body">
         <div class="row">
           <div class="col grid-margin">
-            <a href="" id="url_1">
-              <h2 class="mb-2 font-weight-600" id="title2">
+            <a href="" id="url_2">
+              <h2 class="text-dark" class="mb-2 font-weight-600" id="title2">
               </h2>
             </a>
 
@@ -241,8 +201,8 @@
       <div class="card-body">
         <div class="row">
           <div class="col grid-margin">
-            <a href="" id="url_1">
-              <h2 class="mb-2 font-weight-600" id="title3">
+            <a href="" id="url_3">
+              <h2 class="text-dark" class="mb-2 font-weight-600" id="title3">
               </h2>
             </a>
 
@@ -268,38 +228,79 @@
 </div>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
   <div id="yesterday_confirmed"></div>
-
+<div class="all_countries"></div>
 </body>
 
 
   <script>
+    var country_name = ""
+    var country_code = ""
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() {
     if (xhr.readyState == XMLHttpRequest.DONE) {
       var response = JSON.parse(xhr.responseText);
-      var country_name = response.country_name
+      country_name = response.country_name
+      country_code = response.country_code
       document.getElementById("Country_Name").innerHTML = country_name;
-      // alert(country_name)
-      // $.ajax({url: "demo_test.txt", success: function(result){
-      //     $("#div1").html(result);
-      // }});
-      var xmlhttp = new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          var today_confirmed = JSON.parse(this.responseText);
-          var today_open_cases = JSON.parse(this.responseText);
-          var today_deaths = JSON.parse(this.responseText);
-          var today_recovered = JSON.parse(this.responseText);
 
-          document.getElementById("Confirmed").innerHTML = today_confirmed.total.today_confirmed;
-          document.getElementById("Active").innerHTML = today_open_cases.total.today_open_cases;
-          document.getElementById("Deceased").innerHTML = today_deaths.total.today_deaths;
-          document.getElementById("Recovered").innerHTML = today_recovered.total.today_recovered;
+      var xhr2 = new XMLHttpRequest();
+      xhr2.onreadystatechange = function() {
+        if (xhr2.readyState == XMLHttpRequest.DONE) {
+          var covid_status_response = JSON.parse(this.responseText);
+          // console.log(covid_status_response)
+
+          document.getElementById("Confirmed").innerHTML = covid_status_response[country_name]['CONFIRMED'];
+          document.getElementById("Active").innerHTML = covid_status_response[country_name]['ACTIVE'];
+          document.getElementById("Deceased").innerHTML = covid_status_response[country_name]['DEATHS'];
+          document.getElementById("Recovered").innerHTML = covid_status_response[country_name]['RECOVERED'];
 
         }
       };
-      xmlhttp.open("GET","http://localhost:8080/"+country_name, true);
+      xhr2.open("GET","http://localhost:8080/"+country_name, true);
+      xhr2.send();
+
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          var news_details = JSON.parse(this.responseText);
+
+          document.getElementById("title1").innerHTML = news_details.items[0].title;
+          document.getElementById("description1").innerHTML = news_details.items[0].description;
+          document.getElementById("title2").innerHTML = news_details.items[1].title;
+          document.getElementById("description2").innerHTML = news_details.items[1].description;
+          document.getElementById("title3").innerHTML = news_details.items[2].title;
+          document.getElementById("description3").innerHTML = news_details.items[2].description;
+          document.getElementById("url_1").href = news_details.items[0].url;
+          document.getElementById("url_2").href = news_details.items[1].url;
+          document.getElementById("url_3").href = news_details.items[2].url;
+        }
+      };
+      xmlhttp.open("GET", "http://localhost:8080/"+country_name+"/news", true);
       xmlhttp.send();
+
+      country_code
+      var xhr3 = new XMLHttpRequest();
+      xhr3.onreadystatechange = function() {
+        if (xhr3.readyState == XMLHttpRequest.DONE) {
+          var covid_tracker_api_response = JSON.parse(this.responseText);
+
+          var chart_values_confirmed=[]
+          var chart_values_death=[]
+          var chart_values_recovered=[]
+
+
+          for(var i=0;i<Math.min(covid_tracker_api_response.length,10);i++){
+            chart_values_confirmed.push(covid_tracker_api_response[i].total_confirmed)
+            chart_values_death.push(covid_tracker_api_response[i].total_deaths)
+            chart_values_recovered.push(covid_tracker_api_response[i].total_recovered)
+
+          }
+          show_chart(chart_values_confirmed,chart_values_death,chart_values_recovered)
+
+        }
+      };
+      xhr3.open("GET","https://api.coronatracker.com/v5/analytics/trend/country?countryCode="+country_code+"&startDate=2020-12-04&endDate=2020-12-18", true);
+      xhr3.send();
 
 
     }
@@ -307,108 +308,4 @@
   xhr.open('GET', "https://geolocation-db.com/json/", true);
   xhr.send(null);
 </script>
-
-
-
-<!--Current_Date-->
-
-<script>
-          var d = new Date();
-
-          var month = d.getMonth()+1;
-          var day = d.getDate();
-          var output = d.getFullYear() + '-' +
-          ((''+month).length<2 ? '0' : '') + month + '-' +
-          ((''+day).length<2 ? '0' : '') + day;
-          // document.getElementById("date").innerHTML = "https://api.covid19tracking.narrativa.com/api/" + output +"/country/Global";
-          </script>
-
-
-<!--Country Details -->
-
-<script>
-              // var xmlhttp = new XMLHttpRequest();
-              // xmlhttp.onreadystatechange = function() {
-              //   if (this.readyState == 4 && this.status == 200) {
-              //     var today_confirmed = JSON.parse(this.responseText);
-              //     var today_open_cases = JSON.parse(this.responseText);
-              //     var today_deaths = JSON.parse(this.responseText);
-              //     var today_recovered = JSON.parse(this.responseText);
-              //
-              //     document.getElementById("Confirmed").innerHTML = today_confirmed.total.today_confirmed;
-              //     document.getElementById("Active").innerHTML = today_open_cases.total.today_open_cases;
-              //     document.getElementById("Deceased").innerHTML = today_deaths.total.today_deaths;
-              //     document.getElementById("Recovered").innerHTML = today_recovered.total.today_recovered;
-              //
-              //   }
-              // };
-              // xmlhttp.open("GET","http://localhost:8080/"+country_name, true);
-              // xmlhttp.send();
-              </script>
-
-
-<!-- News -->
-
-<script>
-              var xmlhttp = new XMLHttpRequest();
-              xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                  var news1_Title = JSON.parse(this.responseText);
-                  var news1_Description = JSON.parse(this.responseText);
-                  var news2_Title = JSON.parse(this.responseText);
-                  var news2_Description = JSON.parse(this.responseText);
-                  var news3_Title = JSON.parse(this.responseText);
-                  var news3_Description = JSON.parse(this.responseText);
-
-                  var url_1 = JSON.parse(this.responseText);
-                  var url_2 = JSON.parse(this.responseText);
-                  var url_3 = JSON.parse(this.responseText);
-
-                  document.getElementById("title1").innerHTML = news1_Title.items[0].title;
-                  document.getElementById("description1").innerHTML = news1_Description.items[0].description;
-                  document.getElementById("title2").innerHTML = news2_Title.items[1].title;
-                  document.getElementById("description2").innerHTML = news2_Description.items[1].description;
-                  document.getElementById("title3").innerHTML = news3_Title.items[2].title;
-                  document.getElementById("description3").innerHTML = news3_Description.items[2].description;
-
-                  document.getElementById("url_1").href = url_1.items[0].url;
-                  document.getElementById("url_2").href = url_1.items[1].url;
-                  document.getElementById("url_3").href = url_1.items[2].url;
-                }
-              };
-              xmlhttp.open("GET", "http://api.coronatracker.com/news/trending?limit=5&country=India", true);
-              xmlhttp.send();
-              </script>
-
-
-<!-- Table -->
-<script>
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-              if (this.readyState == 4 && this.status == 200) {
-                var myArr1 = JSON.parse(this.responseText);
-                var myArr2 = JSON.parse(this.responseText);
-                var myArr3 = JSON.parse(this.responseText);
-                var myArr4 = JSON.parse(this.responseText);
-                document.getElementById("countryName").innerHTML = myArr1[0].countryName;
-                document.getElementById("confirmed_Table").innerHTML = myArr2[0].confirmed;
-                document.getElementById("Deaths_Table").innerHTML = myArr3[0].deaths;
-                document.getElementById("Recovered_Table").innerHTML = myArr4[0].recovered;
-              }
-            };
-            xmlhttp.open("GET", "http://api.coronatracker.com/v2/analytics/country" , true);
-            xmlhttp.send();
-            </script>
-         <script>
-          var d = new Date();
-          var month = d.getMonth()+1;
-          var day = d.getDate();
-          var output = d.getFullYear() + '-' +
-          ((''+month).length<2 ? '0' : '') + month + '-' +
-          ((''+day).length<2 ? '0' : '') + day;
-          // document.getElementById("date").innerHTML = "https://api.covid19tracking.narrativa.com/api/" + output +"/country/Global";
-         </script>
-
-
-
 </html>
