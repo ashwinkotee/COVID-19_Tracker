@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<CommandBarModel revision="6">
-	<CommandBar.SetupGroup revision="3" title="Page">
-		<CommandBar.Button type="Menu" command.name="pageMenu"/>
-		<CommandBar.Button type="Menu" command.name="setupMenu">
-			<CommandBar.Icon type="image/png" data="iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHmSURBVEhL7ZMxaFpRFIaPqRIouikk8NwqRdISBxcLhYgOmgRii9RaHHRJEQIuUhxc7CQo6BAHccwkxK10Srw4CNqh0k2Qik5KUdBVFPufq0NjNCSULiUffLxzjvdezjvvSo/8c54sn3fxFEbhB6iHP+Bf8Rqewo9ut1tUq1VhNBoF8mMYhs/gRjZ1/M5sNn8KhUIvW63Wi0QiQQ6Hg0ajEbXb7VeRSGSv0WgcTiaTBtb+Wmy5iWr5XOWiXq8rVqt1md4mlUpRLBb7yuGicpOt5fNPtmEvmUwuMlCr1SidTlOn05H5dDqlbDbL4QBuau4Wn+12uygWi2I2m4lKpSJUKtUl6md6vf5qOBzKOsYjMC6e+Vu5a4V1HZsKhQJ5vV6ZcLfz+fwa4flgMPjZbDZlPR6PUzTKl4Wey8IK6w6uu1wuymQyMuFYq9WeIEyiQ5PFYpH1YDDIM54j/CYL94BnFnE6nfKV2W63K0qlkhiPxzLH7RAGg4HHcCB3rGFdx9zFbjjMVxVfsdcjRVHI4/Fw59Tv90mn05HP5+O
