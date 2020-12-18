@@ -75,7 +75,7 @@
           <div class="card-body">
             <div  class="row align-items-center">
               <div class="row-6">
-                <h5 class="font-weight-normal mt-0 text-truncate" class="align-right title="New">Active</h5>
+                <h5 class="font-weight-normal mt-0 text-truncate" class="align-right  style="color:yellow"><b>Active</b></h5>
                 <h3 class="my-3 py-1" id="Active"></h3>
               </div>
             </div>
@@ -89,7 +89,7 @@
           <div class="card-body">
             <div  class="row align-items-center">
               <div class="row-6">
-                <h5 class="font-weight-normal mt-0 text-truncate" >Confirmed</h5>
+                <h5 class="font-weight-normal mt-0 text-truncate"style="color:blue" ><b>Confirmed</b></h5>
                 <h3 class="my-3 py-1" id="Confirmed"></h3>
               </div>
             </div>
@@ -102,7 +102,7 @@
           <div class="card-body">
             <div  class="row align-items-center">
               <div class="row-6">
-                <h5 class="font-weight-normal mt-0 text-truncate" > Recovered</h5>
+                <h5 class="font-weight-normal mt-0 text-truncate" style="color:green"><b>Recovered</b></h5>
                 <h3 class="my-3 py-1" id="Recovered"></h3>
               </div>
             </div>
@@ -115,7 +115,7 @@
           <div class="card-body">
             <div  class="row align-items-center">
               <div class="row-6">
-                <h5 class="font-weight-normal mt-0 text-truncate" > Deceased</h5>
+                <h5 class="font-weight-normal mt-0 text-truncate" style="color:red"> <b>Deceased</b></h5>
                 <h3 class="my-3 py-1" id="Deceased"></h3>
               </div>
             </div>
@@ -336,12 +336,11 @@
 
       for (var i = 0; i < 10; i++){
         var row = `<tr>
-							<td>${data[i].country}</td>
-							<td>${data[i].totalConfirmed}</td>
-							<td>${data[i].totalDeaths}</td>
-              <td>${data[i].totalRecovered}</td>
-
-					  </tr>`
+	<td>${data[i].country}</td>
+        <td>${data[i].totalConfirmed}</td>
+	<td>${data[i].totalDeaths}</td>
+        <td>${data[i].totalRecovered}</td>
+	</tr>`
         table.innerHTML += row
       }
     }
