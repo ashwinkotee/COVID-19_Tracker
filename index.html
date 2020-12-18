@@ -127,7 +127,7 @@
 </div>
 
 <!--  Chart and Table--> 
-<div class="container-fluid p-5">
+ <div class="container-fluid p-5">
   <div class="row p-7">
     <div class="col-8">
       <div class="container">
@@ -151,7 +151,7 @@
       </table>
   </div>
   </div>
-</div>
+</div> 
 
 <div class="row">
   <div class="col-8">
@@ -308,4 +308,55 @@
   xhr.open('GET', "https://geolocation-db.com/json/", true);
   xhr.send(null);
 </script>
+                                                    <script>
+          var d = new Date();
+
+          var month = d.getMonth()+1;
+          var day = d.getDate();
+          var output = d.getFullYear() + '-' +
+          ((''+month).length<2 ? '0' : '') + month + '-' +
+          ((''+day).length<2 ? '0' : '') + day;
+          </script> -->
+
+
+<!-- Table --> 
+   <script>
+
+    var xhReq = new XMLHttpRequest();
+    xhReq.open("GET", "https://api.coronatracker.com/v3/stats/worldometer/country", false);
+    xhReq.send(null);
+    var myArray = JSON.parse(xhReq.responseText);
+
+    buildTable(myArray)
+
+
+
+    function buildTable(data){
+      var table = document.getElementById('myTable')
+
+      for (var i = 0; i < 10; i++){
+        var row = `<tr>
+							<td>${data[i].country}</td>
+							<td>${data[i].totalConfirmed}</td>
+							<td>${data[i].totalDeaths}</td>
+              <td>${data[i].totalRecovered}</td>
+
+					  </tr>`
+        table.innerHTML += row
+      }
+    }
+
+  </script>
+
+ <script>
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var allCountries = JSON.parse(this.responseText);
+      }
+    };
+    xmlhttp.open("GET", "https://raw.githubusercontent.com/samayo/country-json/master/src/country-by-name.json" , true);
+    xmlhttp.send();
+  </script> 
+  }
 </html>
